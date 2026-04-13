@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import * as Network from 'expo-network'
+import * as Device from 'expo-device'
 
 import { useNetwork } from './hooks/useNetwork'
 import { NetworkCard } from './components/NetworkCard'
@@ -72,9 +73,20 @@ export default function App() {
   const airplaneModeLabel = isAirplaneMode === null ? '—' : isAirplaneMode ? 'Ativo' : 'Desativado'
   const airplaneModeColor = isAirplaneMode ? '#f87171' : '#4ade80'
 
+  // Device.isDevice === false significa emulador/simulador
+  const isEmulator = Platform.OS === 'android' && !Device.isDevice
+
   return (
     <View style={styles.safe}>
       <StatusBar style="light" />
+
+      {isEmulator && (
+        <View style={styles.emulatorBanner}>
+          <Text style={styles.emulatorBannerText}>
+            ⚠️ Emulador Android detectado — dados de rede podem não ser reais
+          </Text>
+        </View>
+      )}
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.container}
@@ -330,6 +342,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     letterSpacing: 0.5,
+  },
+
+  // Banner de emulador
+  emulatorBanner: {
+    backgroundColor: '#7c3aed',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  emulatorBannerText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 
   // Rodapé
